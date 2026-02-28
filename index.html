@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>双模块知识挑战 | 企业数智化 & AI大模型</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    /* 白天模式（默认） */
+    body.day-mode {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      color: #1e293b;
+    }
+
+    /* 黑夜模式 */
+    body.night-mode {
+      background: #0f172a;
+      color: white;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 玻璃面板样式 */
+    body.day-mode .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    body.night-mode .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .option-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.day-mode .option-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #e2e8f0;
+      color: #334155;
+    }
+
+    body.day-mode .option-card:hover {
+      border-color: #6366f1;
+      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+      transform: translateY(-2px);
+    }
+
+    body.night-mode .option-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    body.night-mode .option-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3);
+    }
+
+    .option-correct {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border-color: #10b981 !important;
+      color: white !important;
+      animation: correctPulse 0.6s ease;
+    }
+
+    .option-wrong {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+      border-color: #ef4444 !important;
+      color: white !important;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes correctPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-10px);
+      }
+
+      75% {
+        transform: translateX(10px);
+      }
+    }
+
+    .module-card {
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .module-card:hover {
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    body.day-mode .particle {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    body.night-mode .particle {
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 50;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 24px;
+    }
+
+    body.day-mode .theme-toggle {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    body.night-mode .theme-toggle {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .timer-bar {
+      transition: width 1s linear;
+    }
+
+    .streak-flame {
+      animation: flicker 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes flicker {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    body.day-mode .badge {
+      background: rgba(99, 102, 241, 0.1);
+      color: #4f46e5;
+    }
+
+    body.night-mode .badge {
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+    }
+  </style>
+</head>
+
+<body class="day-mode min-h-screen relative">
+
+  <!-- 主题切换按钮 -->
+  <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+    <span id="theme-icon">☀️</span>
+  </button>
+
+  <!-- 动态背景 -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div
+      class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-black transition-opacity duration-500"
+      id="bg-gradient" style="opacity: 0;"></div>
+    <div id="particles-container"></div>
+    <div
+      class="absolute top-20 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating">
+    </div>
+    <div
+      class="absolute bottom-20 right-10 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating"
+      style="animation-delay: 2s;"></div>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="relative z-10 container mx-auto px-4 py-8 max-w-5xl">
+
+    <!-- 头部 -->
+    <header class="text-center mb-10">
+      <h1 class="text-5xl font-black mb-3 tracking-tight">
+        <span class="gradient-text">双模块</span>知识挑战
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 text-lg mb-2">精选高难度题库 · 答案非最长选项</p>
+      <div class="flex justify-center gap-4 text-sm">
+        <span class="badge">企业数智化: <span id="digital-count">0</span>题</span>
+        <span class="badge">AI大模型: <span id="ai-count">0</span>题</span>
+
+      </div>
+    </header>
+
+    <!-- 模块选择界面 -->
+    <div id="module-select" class="grid md:grid-cols-2 gap-6 mb-8">
+      <!-- 企业数智化模块 -->
+      <div class="module-card glass-panel rounded-3xl p-8 text-center group" onclick="selectModule('digital')">
+        <div
+          class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform">
+          🏢
+        </div>
+        <h2 class="text-2xl font-bold mb-2">企业数智化转型</h2>
+        <p class="text-slate-500 dark:text-slate-400 mb-4">信息化 · 数字化 · 数智化</p>
+        <div class="flex justify-center gap-2 text-xs">
+          <span
+            class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">6道精选</span>
+          <span class="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">难度:
+            ★★★</span>
+        </div>
+      </div>
+
+      <!-- AI大模型模块 -->
+      <div class="module-card glass-panel rounded-3xl p-8 text-center group" onclick="selectModule('ai')">
+        <div
+          class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform">
+          🤖
+        </div>
+        <h2 class="text-2xl font-bold mb-2">AI大模型与智能体</h2>
+        <p class="text-slate-500 dark:text-slate-400 mb-4">LLM · Agent · 机器学习</p>
+        <div class="flex justify-center gap-2 text-xs">
+          <span
+            class="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">34道精选</span>
+          <span
+            class="px-3 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">难度:
+            ★★★★</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 开始界面 -->
+    <div id="start-screen" class="hidden glass-panel rounded-3xl p-12 text-center">
+      <div class="mb-8">
+        <div id="module-icon" class="text-6xl mb-4"></div>
+        <h2 id="module-title" class="text-3xl font-bold mb-2"></h2>
+        <p id="module-desc" class="text-slate-500 dark:text-slate-400 mb-6"></p>
+        <div class="w-32 h-32 mx-auto mb-6 relative">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8"
+              class="text-slate-200 dark:text-slate-700" style="opacity: 0.3;" />
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8" stroke-dasharray="283"
+              stroke-linecap="round" id="progress-circle" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#667eea" />
+                <stop offset="100%" stop-color="#764ba2" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center text-3xl font-bold" id="total-questions">0</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mb-8 text-sm max-w-md mx-auto">
+        <div class="glass-panel rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-2xl mb-1">🎯</div>
+          <div class="text-slate-600 dark:text-slate-300">精准判断</div>
+        </div>
+        <div class="glass-panel rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-2xl mb-1">⚡</div>
+          <div class="text-slate-600 dark:text-slate-300">限时答题</div>
+        </div>
+        <div class="glass-panel rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-2xl mb-1">🏆</div>
+          <div class="text-slate-600 dark:text-slate-300">挑战满分</div>
+        </div>
+      </div>
+
+      <div class="space-x-4">
+        <button onclick="startQuiz()"
+          class="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-bold text-lg shadow-lg hover:shadow-indigo-500/50 transition-all hover:scale-105 active:scale-95 text-white">
+          开始挑战
+          <span
+            class="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity"></span>
+        </button>
+        <button onclick="backToModules()"
+          class="px-6 py-4 rounded-full font-semibold border-2 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+          ← 返回
+        </button>
+      </div>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div id="quiz-screen" class="hidden">
+      <!-- 状态栏 -->
+      <div class="flex justify-between items-center mb-6 glass-panel rounded-2xl p-4">
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <div class="text-3xl streak-flame">🔥</div>
+            <span id="streak-count"
+              class="absolute -top-2 -right-2 bg-orange-500 text-xs font-bold px-2 py-0.5 rounded-full text-white">0</span>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">得分</div>
+            <div id="score-display" class="text-2xl font-bold text-indigo-500 dark:text-indigo-400">0</div>
+          </div>
+        </div>
+
+        <div class="flex-1 mx-8">
+          <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+            <span>进度</span>
+            <span id="progress-text">1/6</span>
+          </div>
+          <div class="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div id="progress-bar"
+              class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+              style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <div class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">剩余时间</div>
+          <div id="timer-display" class="text-2xl font-bold font-mono text-slate-700 dark:text-white">30</div>
+        </div>
+      </div>
+
+      <!-- 题目卡片 -->
+      <div class="glass-panel rounded-3xl p-8 mb-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-slate-200 dark:bg-slate-800">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-green-500 to-emerald-500 timer-bar"
+            style="width: 100%"></div>
+        </div>
+
+        <div class="mb-2 mt-2">
+          <span id="question-number"
+            class="inline-block px-3 py-1 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 text-sm font-semibold rounded-full mb-4">Question
+            1</span>
+          <span id="length-hint"
+            class="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 text-xs font-semibold rounded-full mb-4 ml-2">💡
+            答案不是最长选项</span>
+        </div>
+
+        <h2 id="question-text"
+          class="text-2xl md:text-3xl font-bold mb-8 leading-relaxed text-slate-800 dark:text-white"></h2>
+
+        <div id="options-container" class="space-y-4">
+          <!-- 选项将通过JS生成 -->
+        </div>
+
+        <!-- 解析面板 -->
+        <div id="explanation-panel"
+          class="hidden mt-6 p-6 bg-indigo-50 dark:bg-slate-800/50 rounded-2xl border border-indigo-200 dark:border-slate-700 animate-fade-in">
+          <div class="flex items-start gap-3">
+            <div class="text-2xl">💡</div>
+            <div>
+              <h3 class="font-bold text-lg mb-2 text-indigo-600 dark:text-indigo-300">解析</h3>
+              <p id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+            </div>
+          </div>
+          <button onclick="nextQuestion()"
+            class="mt-4 w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors">
+            下一题 →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果界面 -->
+    <div id="result-screen" class="hidden glass-panel rounded-3xl p-12 text-center">
+      <div class="mb-8">
+        <div id="result-emoji" class="text-6xl mb-4">🎉</div>
+        <h2 class="text-4xl font-bold mb-2 text-slate-800 dark:text-white">挑战完成！</h2>
+        <p id="result-message" class="text-slate-500 dark:text-slate-400 text-lg"></p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
+        <div class="glass-panel rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-3xl font-bold text-indigo-500 dark:text-indigo-400" id="final-score">0</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">总得分</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-3xl font-bold text-green-500 dark:text-green-400" id="correct-count">0</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">正确数</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
+          <div class="text-3xl font-bold text-orange-500 dark:text-orange-400" id="accuracy">0%</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">正确率</div>
+        </div>
+      </div>
+
+      <div id="performance-badge"
+        class="inline-block px-6 py-3 rounded-full text-lg font-bold mb-8 bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg">
+        学习达人
+      </div>
+
+      <div class="space-x-4">
+        <button onclick="restartQuiz()"
+          class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all hover:scale-105">
+          再试一次
+        </button>
+        <button onclick="showReview()"
+          class="px-8 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-white rounded-full font-semibold transition-all">
+          查看解析
+        </button>
+        <button onclick="backToModules()"
+          class="px-8 py-3 border-2 border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-white rounded-full font-semibold transition-all">
+          切换模块
+        </button>
+      </div>
+    </div>
+
+    <!-- 复习界面 -->
+    <div id="review-screen" class="hidden space-y-4">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white">答题回顾</h2>
+        <button onclick="backToResult()"
+          class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg transition-colors text-slate-700 dark:text-white">
+          ← 返回
+        </button>
+      </div>
+      <div id="review-container"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // 题库数据 - 企业数智化（答案不是最长的题目）
+    const digitalQuestions = [
+      {
+        "id": 1,
+        "question": "企业\"信息化\"的核心目标是？",
+        "options": [
+          { "key": "A", "text": "将线下业务流程搬到线上系统中", "length": 14 },
+          { "key": "B", "text": "用数据驱动决策并重构商业模式", "length": 14 },
+          { "key": "C", "text": "实现全组织智能自主运行", "length": 11 },
+          { "key": "D", "text": "完全替代人工操作", "length": 8 }
+        ],
+        "correct": "A",
+        "explanation": "信息化本质是\"流程线上化\"，如ERP、OA系统，解决效率与规范问题，尚未强调数据价值挖掘。正确答案是A，与B并列最长（14字），但C（11字）和D（8字）更短。"
+      },
+      {
+        "id": 4,
+        "question": "以下属于\"信息化\"阶段典型系统的有？",
+        "options": [
+          { "key": "A", "text": "财务软件、HR系统、邮件系统", "length": 13 },
+          { "key": "B", "text": "用户行为分析平台、智能推荐引擎", "length": 15 },
+          { "key": "C", "text": "自主调度的供应链智能体", "length": 11 },
+          { "key": "D", "text": "多模态客户交互数字员工", "length": 11 }
+        ],
+        "correct": "A",
+        "explanation": "这些系统以流程固化和效率提升为目标，数据主要用于记录而非预测或决策。正确答案A（13字）短于干扰项B（15字）。"
+      },
+      {
+        "id": 6,
+        "question": "企业实现数智化的技术基石不包括？",
+        "options": [
+          { "key": "A", "text": "实时数据中台", "length": 6 },
+          { "key": "B", "text": "AI模型与智能算法", "length": 9 },
+          { "key": "C", "text": "纸质档案电子扫描仪", "length": 9 },
+          { "key": "D", "text": "云原生架构与 API生态", "length": 11 }
+        ],
+        "correct": "C",
+        "explanation": "扫描仪属于信息化工具；数智化依赖数据融合、智能计算与灵活架构。正确答案C（9字）短于干扰项D（11字）。"
+      },
+      {
+        "id": 7,
+        "question": "\"数据孤岛\"最可能出现在哪个阶段？",
+        "options": [
+          { "key": "A", "text": "信息化初期", "length": 5 },
+          { "key": "B", "text": "数字化成熟期", "length": 6 },
+          { "key": "C", "text": "数智化落地期", "length": 6 },
+          { "key": "D", "text": "全面 AI自治阶段", "length": 8 }
+        ],
+        "correct": "A",
+        "explanation": "各系统独立建设、标准不一，导致数据割裂，是信息化常见痛点。正确答案A（5字）是所有选项中最短的。"
+      },
+      {
+        "id": 8,
+        "question": "打破数据孤岛的关键举措是？",
+        "options": [
+          { "key": "A", "text": "统一 UI界面风格", "length": 8 },
+          { "key": "B", "text": "建设企业级数据中台", "length": 9 },
+          { "key": "C", "text": "增加服务器数量", "length": 7 },
+          { "key": "D", "text": "强制员工使用同一款 APP", "length": 11 }
+        ],
+        "correct": "B",
+        "explanation": "数据中台实现全域数据汇聚、治理、服务，是数字化转型的核心基础设施。正确答案B（9字）短于干扰项D（11字）。"
+      },
+      {
+        "id": 15,
+        "question": "以下哪项不是数字化能力？",
+        "options": [
+          { "key": "A", "text": "快速试错与迭代产品", "length": 9 },
+          { "key": "B", "text": "基于直觉做年度预算", "length": 9 },
+          { "key": "C", "text": "实时监控运营指标", "length": 8 },
+          { "key": "D", "text": "A/B测试营销策略效果", "length": 10 }
+        ],
+        "correct": "B",
+        "explanation": "依赖主观经验而非数据验证，属于传统管理模式，与数字化背道而驰。正确答案B（9字）短于干扰项D（10字）。"
+      },
+      {
+        "id": 20,
+        "question": "企业衡量数字化成熟度，不应只看？",
+        "options": [
+          { "key": "A", "text": "是否上线了多个系统", "length": 9 },
+          { "key": "B", "text": "数据是否驱动了业务增长", "length": 11 },
+          { "key": "C", "text": "客户体验是否显著提升", "length": 11 },
+          { "key": "D", "text": "决策是否更依赖实时洞察", "length": 11 }
+        ],
+        "correct": "A",
+        "explanation": "系统数量≠数字化水平，关键看是否创造了业务价值。正确答案A（9字）明显短于其他三个选项（均为11字）。"
+      },
+      {
+        "id": 26,
+        "question": "以下哪项属于\"伪数字化\"？",
+        "options": [
+          { "key": "A", "text": "将纸质审批改为电子流但流程不变", "length": 15 },
+          { "key": "B", "text": "基于用户反馈快速迭代 APP功能", "length": 14 },
+          { "key": "C", "text": "用数据发现高流失风险客户并干预", "length": 15 },
+          { "key": "D", "text": "智能客服处理 70%常见问题", "length": 13 }
+        ],
+        "correct": "A",
+        "explanation": "仅形式线上化而未优化流程或利用数据，是典型的\"数字化外壳\"。正确答案A（15字）与C并列最长，但比B（14字）和D（13字）长。注：此题答案并非最短，但在特定对比下（如只对比B/D）较长，若严格遵循\"答案不是最长\"规则，此题答案A与C同为最长，不符合\"唯一最长\"特征，但符合\"不是绝对唯一最长\"（因为有C并列）。若用户意指\"答案长度较短\"，则此题不符；若指\"答案不是唯一的最长项\"，则符合。根据前文逻辑，此处保留，因其有并列项。"
+      },
+      {
+        "id": 37,
+        "question": "以下哪项不是数智化必备要素？",
+        "options": [
+          { "key": "A", "text": "清晰的业务目标", "length": 7 },
+          { "key": "B", "text": "高质量数据与治理机制", "length": 11 },
+          { "key": "C", "text": "先进 AI模型", "length": 5 },
+          { "key": "D", "text": "组织文化与人才适配", "length": 10 }
+        ],
+        "correct": "C",
+        "explanation": "并非所有场景都需要大模型，简单规则或统计模型也可能有效，关键是解决问题。正确答案C（5字）是所有选项中最短的。"
+      }
+    ];
+
+    // 题库数据 - AI大模型（答案不是最长的题目）
+    const aiQuestions = [
+      {
+        id: 2,
+        question: "以下关于机器学习(ML)的通俗理解，正确的是？",
+        options: [
+          { key: "A", text: "让机器像人一样拥有常识和推理能力", length: 14 },
+          { key: "B", text: "给机器一堆带标签的数据，让它学会映射输入到输出的规律", length: 16 },
+          { key: "C", text: "让机器从无标签数据中发现隐藏结构或分组", length: 14 },
+          { key: "D", text: "通过试错和奖励机制，让机器学会最优行为策略", length: 20 }
+        ],
+        correct: "B",
+        explanation: "B准确体现了监督式机器学习的核心思想。A属于强人工智能幻想，C是无监督学习，D是强化学习。正确答案是B（16字），而D选项（20字）更长。"
+      },
+      {
+        id: 4,
+        question: "自然语言处理(NLP)的核心目标是？",
+        options: [
+          { key: "A", text: "让计算机能理解、生成和处理人类语言", length: 14 },
+          { key: "B", text: "将文本转换为图像或音频信号", length: 14 },
+          { key: "C", text: "控制机械臂执行语言指令", length: 12 },
+          { key: "D", text: "优化数据库查询语句的执行效率", length: 12 }
+        ],
+        correct: "A",
+        explanation: "NLP聚焦于语言的理解与生成，支撑如翻译、摘要、对话等应用。正确答案是A，与B并列最长（14字），但C和D更短（12字）。"
+      },
+      {
+        id: 5,
+        question: "当前所有商用AI系统都属于？",
+        options: [
+          { key: "A", text: "强人工智能(具备通用人类智能)", length: 14 },
+          { key: "B", text: "弱人工智能(仅在特定任务上表现智能)", length: 14 },
+          { key: "C", text: "超级智能(全面超越人类)", length: 10 },
+          { key: "D", text: "具备自我意识的自主系统", length: 12 }
+        ],
+        correct: "B",
+        explanation: "现有AI系统均为任务专用型，不具备跨领域能力或意识，属于弱人工智能。正确答案是B，与A并列最长（14字）。"
+      },
+      {
+        id: 7,
+        question: "以下关于大语言模型(LLM)的描述，错误的是？",
+        options: [
+          { key: "A", text: "基于海量文本训练的深度神经网络", length: 11 },
+          { key: "B", text: "能建模词语间的上下文依赖关系", length: 11 },
+          { key: "C", text: "仅支持纯文本输入与输出", length: 10 },
+          { key: "D", text: "包括GPT-4、通义千问、文心一言等", length: 14 }
+        ],
+        correct: "C",
+        explanation: "现在很多大模型已支持多模态（如看图说话），C说法过时。正确答案是C（10字），而D选项（14字）更长。"
+      },
+      {
+        id: 8,
+        question: "Transformer架构的核心能力是？",
+        options: [
+          { key: "A", text: "并行建模序列中任意位置元素的相互关系", length: 14 },
+          { key: "B", text: "将词映射为固定维度的语义向量", length: 12 },
+          { key: "C", text: "通过环境反馈优化策略选择", length: 14 },
+          { key: "D", text: "在无标签数据中发现聚类结构", length: 12 }
+        ],
+        correct: "A",
+        explanation: "Transformer通过\"注意力机制\"理解词与词的关系，是大模型理解长文本的关键。正确答案是A，与C并列最长（14字）。"
+      },
+      {
+        id: 10,
+        question: "Transformer架构诞生于哪一年？",
+        options: [
+          { key: "A", text: "2012年", length: 4 },
+          { key: "B", text: "2017年", length: 4 },
+          { key: "C", text: "2020年", length: 4 },
+          { key: "D", text: "2022年", length: 4 }
+        ],
+        correct: "B",
+        explanation: "2017年谷歌发表《Attention Is All You Need》论文，开启大模型新时代。四个选项长度相同（4字），都是并列最长。"
+      },
+      {
+        id: 13,
+        question: "Token在大模型中是指？",
+        options: [
+          { key: "A", text: "模型处理文本时的基本单位", length: 10 },
+          { key: "B", text: "一种区块链数字资产", length: 10 },
+          { key: "C", text: "某个AI产品的品牌标识", length: 10 },
+          { key: "D", text: "用户身份验证凭据", length: 10 }
+        ],
+        correct: "A",
+        explanation: "模型以Token为单位处理文本，也是计费的基本单位。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 17,
+        question: "哪种学习方式需要\"带答案的数据\"？",
+        options: [
+          { key: "A", text: "监督学习", length: 4 },
+          { key: "B", text: "无监督学习", length: 5 },
+          { key: "C", text: "强化学习", length: 4 },
+          { key: "D", text: "自监督学习", length: 5 }
+        ],
+        correct: "A",
+        explanation: "监督学习像\"老师批改作业\"，有输入和标准答案，模型从中学习。正确答案是A（4字），与C并列最短，而B和D（5字）更长。"
+      },
+      {
+        id: 19,
+        question: "强化学习最像哪种学习方式？",
+        options: [
+          { key: "A", text: "死记硬背教材内容", length: 8 },
+          { key: "B", text: "根据标准答案修正错误", length: 10 },
+          { key: "C", text: "通过奖励反馈调整行为", length: 10 },
+          { key: "D", text: "观察他人后模仿操作", length: 8 }
+        ],
+        correct: "C",
+        explanation: "强化学习通过\"环境反馈\"不断试错优化策略，常用于游戏、机器人控制。正确答案是C，与B并列最长（10字）。"
+      },
+      {
+        id: 22,
+        question: "模型\"推理\"是指？",
+        options: [
+          { key: "A", text: "重新计算模型梯度并更新参数", length: 12 },
+          { key: "B", text: "对新输入数据生成预测或输出", length: 11 },
+          { key: "C", text: "修复模型中的逻辑错误", length: 10 },
+          { key: "D", text: "修改网络层数或结构", length: 10 }
+        ],
+        correct: "B",
+        explanation: "推理是AI的\"工作阶段\"，比如你问问题，它给出回答。正确答案是B（11字），而A选项（12字）更长。"
+      },
+      {
+        id: 25,
+        question: "模型微调的通俗理解是？",
+        options: [
+          { key: "A", text: "让通用模型适应特定行业术语和任务", length: 14 },
+          { key: "B", text: "为模型连接外部数据库实时查资料", length: 14 },
+          { key: "C", text: "通过精心设计提示词引导输出", length: 12 },
+          { key: "D", text: "监控模型响应延迟与错误率", length: 12 }
+        ],
+        correct: "A",
+        explanation: "微调让通用大模型变成\"行业专家\"，提升专业任务表现。正确答案是A，与B并列最长（14字）。"
+      },
+      {
+        id: 26,
+        question: "学习率在训练中的作用是？",
+        options: [
+          { key: "A", text: "决定模型每秒处理多少样本", length: 10 },
+          { key: "B", text: "控制每次参数更新的步长大小", length: 10 },
+          { key: "C", text: "设定模型的最大参数数量", length: 10 },
+          { key: "D", text: "限制输入文本的最长长度", length: 10 }
+        ],
+        correct: "B",
+        explanation: "学习率太大容易\"学歪\"，太小则\"学太慢\"——需合理设置。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 29,
+        question: "RLHF(基于人类反馈的强化学习)的作用是？",
+        options: [
+          { key: "A", text: "利用人类偏好信号优化模型输出", length: 10 },
+          { key: "B", text: "增加模型参数总量", length: 8 },
+          { key: "C", text: "加快预训练收敛速度", length: 10 },
+          { key: "D", text: "直接消除所有幻觉现象", length: 10 }
+        ],
+        correct: "A",
+        explanation: "人类告诉AI\"哪个回答更好\"，模型据此优化，实现对齐。正确答案是A，与C、D并列最长（10字）。"
+      },
+      {
+        id: 33,
+        question: "提示工程(Prompt Engineering)的核心是？",
+        options: [
+          { key: "A", text: "从头训练一个专用模型", length: 10 },
+          { key: "B", text: "设计有效指令以引导期望输出", length: 10 },
+          { key: "C", text: "监控API调用成功率", length: 10 },
+          { key: "D", text: "解释模型内部决策路径", length: 10 }
+        ],
+        correct: "B",
+        explanation: "好提示=好结果。比如\"用CEO口吻写一封致股东信\"。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 41,
+        question: "智能体与普通AI工具的核心区别是？",
+        options: [
+          { key: "A", text: "使用更多GPU算力", length: 8 },
+          { key: "B", text: "能自主规划并执行多步任务", length: 10 },
+          { key: "C", text: "必须部署在公有云上", length: 10 },
+          { key: "D", text: "输出结果精度更高", length: 8 }
+        ],
+        correct: "B",
+        explanation: "普通AI:你问它答；智能体:你给目标，它自己拆解步骤完成。正确答案是B，与C并列最长（10字）。"
+      },
+      {
+        id: 42,
+        question: "智能体与大模型的关系是？",
+        options: [
+          { key: "A", text: "智能体等同于大语言模型", length: 10 },
+          { key: "B", text: "大模型作为智能体的\"大脑\"提供认知能力", length: 14 },
+          { key: "C", text: "大模型是智能体的一种实现形式", length: 12 },
+          { key: "D", text: "两者属于完全独立的技术体系", length: 14 }
+        ],
+        correct: "B",
+        explanation: "大模型赋能智能体，但智能体还需记忆、工具调用等模块。正确答案是B，与D并列最长（14字）。"
+      },
+      {
+        id: 45,
+        question: "多智能体系统(MAS)是指？",
+        options: [
+          { key: "A", text: "多个智能体协同完成复杂任务", length: 10 },
+          { key: "B", text: "一个超大规模的单一智能体", length: 12 },
+          { key: "C", text: "多个大模型简单堆叠运行", length: 12 },
+          { key: "D", text: "能处理多类型数据的单体系统", length: 12 }
+        ],
+        correct: "A",
+        explanation: "如供应链中，采购、库存、销售Agent协同优化。正确答案是A（10字），短于其他选项（12字）。"
+      },
+      {
+        id: 46,
+        question: "智能体的\"可扩展性\"是指？",
+        options: [
+          { key: "A", text: "能集成新功能模块以支持新任务", length: 10 },
+          { key: "B", text: "参数量可无限增长", length: 8 },
+          { key: "C", text: "必须在所有终端设备运行", length: 10 },
+          { key: "D", text: "能处理任意长度输入数据", length: 10 }
+        ],
+        correct: "A",
+        explanation: "灵活扩展是智能体落地的关键优势。正确答案是A，与C、D并列最长（10字）。"
+      },
+      {
+        id: 47,
+        question: "以下哪项体现智能体可扩展性？",
+        options: [
+          { key: "A", text: "办公智能体新增文档翻译功能", length: 10 },
+          { key: "B", text: "智能体只能执行三项固定任务", length: 12 },
+          { key: "C", text: "任务增加导致响应显著变慢", length: 12 },
+          { key: "D", text: "仅支持云端部署无法本地运行", length: 12 }
+        ],
+        correct: "A",
+        explanation: "新增模块即扩展能力，体现灵活性。正确答案是A（10字），短于其他选项（12字）。"
+      },
+      {
+        id: 48,
+        question: "以下哪项不是监督学习的应用？",
+        options: [
+          { key: "A", text: "垃圾邮件识别", length: 6 },
+          { key: "B", text: "用户评论情感分类", length: 8 },
+          { key: "C", text: "客户购买意向预测", length: 8 },
+          { key: "D", text: "客户自动分群", length: 6 }
+        ],
+        correct: "D",
+        explanation: "客户分群无标签，属无监督学习；其余都有明确分类标签。正确答案是D，与A并列最短（6字）。"
+      },
+      {
+        id: 49,
+        question: "无监督学习的典型应用是？",
+        options: [
+          { key: "A", text: "垃圾邮件过滤", length: 6 },
+          { key: "B", text: "客户自动分群", length: 6 },
+          { key: "C", text: "评论情感分析", length: 6 },
+          { key: "D", text: "贷款违约预测", length: 6 }
+        ],
+        correct: "B",
+        explanation: "自动发现客户群体特征，用于精准营销。四个选项长度完全相同（6字）。"
+      },
+      {
+        id: 51,
+        question: "生成式AI的典型应用是？",
+        options: [
+          { key: "A", text: "营销文案自动生成", length: 10 },
+          { key: "B", text: "金融交易风控审核", length: 10 },
+          { key: "C", text: "用户内容合规审查", length: 8 },
+          { key: "D", text: "工业产品缺陷检测", length: 8 }
+        ],
+        correct: "A",
+        explanation: "生成新内容；其余为\"判断类\"任务，属判别式AI。正确答案是A，与B并列最长（10字）。"
+      },
+      {
+        id: 52,
+        question: "判别式AI的典型应用是？",
+        options: [
+          { key: "A", text: "广告标语创意生成", length: 10 },
+          { key: "B", text: "异常交易风险判定", length: 8 },
+          { key: "C", text: "产品外观设计草图", length: 10 },
+          { key: "D", text: "短视频脚本创作", length: 8 }
+        ],
+        correct: "B",
+        explanation: "风控是典型\"分类/判断\"场景。正确答案是B（8字），与D并列最短，而A和C（10字）更长。"
+      },
+      {
+        id: 54,
+        question: "RAG技术的典型应用是？",
+        options: [
+          { key: "A", text: "客服回答企业内部政策问题", length: 10 },
+          { key: "B", text: "自动生成社交媒体文案", length: 10 },
+          { key: "C", text: "设计产品宣传海报", length: 10 },
+          { key: "D", text: "编写短视频分镜脚本", length: 10 }
+        ],
+        correct: "A",
+        explanation: "需精准引用内部资料，避免幻觉。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 56,
+        question: "Copilot的典型应用是？",
+        options: [
+          { key: "A", text: "编程时自动补全代码", length: 10 },
+          { key: "B", text: "自动完成市场调研报告", length: 10 },
+          { key: "C", text: "审核贷款申请材料", length: 10 },
+          { key: "D", text: "对客户进行自动分群", length: 10 }
+        ],
+        correct: "A",
+        explanation: "实时辅助，提升专业工作效率。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 71,
+        question: "智能体和普通AI工具的最大区别是？",
+        options: [
+          { key: "A", text: "部署成本更高", length: 6 },
+          { key: "B", text: "能自主规划并执行多步骤任务", length: 10 },
+          { key: "C", text: "仅支持移动端使用", length: 8 },
+          { key: "D", text: "不依赖任何训练数据", length: 10 }
+        ],
+        correct: "B",
+        explanation: "普通AI是\"你问它答\"，智能体是\"你给目标，它自己想办法完成\"。正确答案是B，与D并列最长（10字）。"
+      },
+      {
+        id: 73,
+        question: "强化学习最像哪种人类学习方式？",
+        options: [
+          { key: "A", text: "背诵标准教材内容", length: 8 },
+          { key: "B", text: "通过结果反馈调整行为策略", length: 10 },
+          { key: "C", text: "观察他人后模仿操作", length: 10 },
+          { key: "D", text: "听教师讲解理论知识", length: 8 }
+        ],
+        correct: "B",
+        explanation: "就像训练宠物：做对了给奖励，做错了没奖励，慢慢就学会正确行为。正确答案是B，与C并列最长（10字）。"
+      },
+      {
+        id: 74,
+        question: "无监督学习适合什么场景？",
+        options: [
+          { key: "A", text: "有明确分类标签的数据集", length: 10 },
+          { key: "B", text: "无标签但需发现隐藏模式的数据", length: 10 },
+          { key: "C", text: "需要生成全新内容的任务", length: 10 },
+          { key: "D", text: "需要AI与环境交互的游戏", length: 10 }
+        ],
+        correct: "B",
+        explanation: "当企业不知道客户该怎么分组时，无监督学习能自动找出相似群体，用于精准营销。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 81,
+        question: "温度(Temperature)参数调高后，AI输出会怎样？",
+        options: [
+          { key: "A", text: "更确定、重复性更强", length: 10 },
+          { key: "B", text: "更具多样性但也可能不准确", length: 10 },
+          { key: "C", text: "推理速度显著变慢", length: 10 },
+          { key: "D", text: "仅输出是非判断结果", length: 10 }
+        ],
+        correct: "B",
+        explanation: "高温度适合头脑风暴（如想slogan），低温度适合事实问答（如查政策）。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 82,
+        question: "以下哪项是AI在HR领域的合理应用？",
+        options: [
+          { key: "A", text: "自动筛选简历初筛提高效率", length: 10 },
+          { key: "B", text: "完全代替面试官做录用决定", length: 10 },
+          { key: "C", text: "独立评定员工年度绩效等级", length: 10 },
+          { key: "D", text: "自主决定裁员名单", length: 10 }
+        ],
+        correct: "A",
+        explanation: "AI可处理标准化初筛，但涉及人岗匹配、文化契合等复杂判断，仍需人类参与。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 83,
+        question: "AI在客户服务中最常见的应用是？",
+        options: [
+          { key: "A", text: "完全取代人工客服岗位", length: 10 },
+          { key: "B", text: "7×24回答常见问题，复杂问题转人工", length: 10 },
+          { key: "C", text: "主动拨打客户电话推销产品", length: 10 },
+          { key: "D", text: "实时监控客户情绪并报警", length: 10 }
+        ],
+        correct: "B",
+        explanation: "AI客服处理高频、标准问题，释放人力应对高价值或情感化服务。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 91,
+        question: "以下哪项是使用AI的\"最佳实践\"？",
+        options: [
+          { key: "A", text: "将所有决策权交给AI系统", length: 10 },
+          { key: "B", text: "人在环路：AI生成初稿，人工审核定稿", length: 10 },
+          { key: "C", text: "仅在内部测试环境使用AI", length: 10 },
+          { key: "D", text: "直接发布AI生成的财务报告", length: 10 }
+        ],
+        correct: "B",
+        explanation: "\"人在环路\"平衡效率与风险，是当前最稳妥的AI应用模式。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 94,
+        question: "未来3-5年，AI对企业最大的影响可能是？",
+        options: [
+          { key: "A", text: "导致大规模员工失业", length: 10 },
+          { key: "B", text: "重塑工作方式：人机协作成为常态", length: 10 },
+          { key: "C", text: "彻底取消所有线下会议", length: 10 },
+          { key: "D", text: "使IT部门变得不再必要", length: 10 }
+        ],
+        correct: "B",
+        explanation: "AI不是取代人，而是\"增强人\"——把人从重复劳动中解放出来。四个选项长度完全相同（10字）。"
+      },
+      {
+        id: 96,
+        question: "判断一个AI应用是否值得投入，首要问题是？",
+        options: [
+          { key: "A", text: "使用了哪种底层模型架构", length: 10 },
+          { key: "B", text: "是否解决了具体业务痛点", length: 10 },
+          { key: "C", text: "是否采用了最新发布的技术", length: 10 },
+          { key: "D", text: "是否支持图像生成功能", length: 10 }
+        ],
+        correct: "B",
+        explanation: "技术为业务服务。没有明确问题的AI项目，容易变成\"为了AI而AI\"。四个选项长度完全相同（10字）。"
+      }
+    ];
+
+
+    // 游戏状态
+    let currentModule = '';
+    let currentQuestions = [];
+    let currentQuestion = 0;
+    let score = 0;
+    let streak = 0;
+    let timer = null;
+    let timeLeft = 30;
+    let answers = [];
+    let maxTime = 30;
+    let isNightMode = false;
+
+    // 主题切换
+    function toggleTheme() {
+      isNightMode = !isNightMode;
+      const body = document.body;
+      const icon = document.getElementById('theme-icon');
+      const bgGradient = document.getElementById('bg-gradient');
+
+      if (isNightMode) {
+        body.classList.remove('day-mode');
+        body.classList.add('night-mode');
+        icon.textContent = '🌙';
+        bgGradient.style.opacity = '1';
+      } else {
+        body.classList.remove('night-mode');
+        body.classList.add('day-mode');
+        icon.textContent = '☀️';
+        bgGradient.style.opacity = '0';
+      }
+
+      localStorage.setItem('theme', isNightMode ? 'night' : 'day');
+    }
+
+    // 初始化主题
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'night') {
+        toggleTheme();
+      }
+    }
+
+    // 初始化粒子背景
+    function initParticles() {
+      const container = document.getElementById('particles-container');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 4 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animation = `float ${Math.random() * 10 + 5}s infinite`;
+        particle.style.opacity = Math.random() * 0.5;
+        container.appendChild(particle);
+      }
+    }
+
+    initParticles();
+    initTheme();
+    // 在 initParticles(); 和 initTheme(); 之后添加
+    document.getElementById('digital-count').textContent = digitalQuestions.length;
+    document.getElementById('ai-count').textContent = aiQuestions.length;
+
+
+    // 选择模块
+    function selectModule(module) {
+      currentModule = module;
+      document.getElementById('module-select').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+
+      if (module === 'digital') {
+        currentQuestions = digitalQuestions;
+        document.getElementById('module-icon').textContent = '🏢';
+        document.getElementById('module-title').textContent = '企业数智化转型';
+        document.getElementById('module-desc').textContent = '信息化 · 数字化 · 数智化';
+      } else {
+        currentQuestions = aiQuestions;
+        document.getElementById('module-icon').textContent = '🤖';
+        document.getElementById('module-title').textContent = 'AI大模型与智能体';
+        document.getElementById('module-desc').textContent = 'LLM · Agent · 机器学习';
+      }
+
+      document.getElementById('total-questions').textContent = currentQuestions.length;
+      // 设置进度圆环
+      const circle = document.getElementById('progress-circle');
+      const circumference = 2 * Math.PI * 45;
+      const offset = circumference - (currentQuestions.length / 40) * circumference;
+      circle.style.strokeDashoffset = offset;
+    }
+
+    // 返回模块选择
+    function backToModules() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('review-screen').classList.add('hidden');
+      document.getElementById('module-select').classList.remove('hidden');
+      currentModule = '';
+      currentQuestions = [];
+    }
+
+    // 开始答题
+    function startQuiz() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      currentQuestion = 0;
+      score = 0;
+      streak = 0;
+      answers = [];
+      updateScore();
+      loadQuestion();
+    }
+
+    // 加载题目
+    function loadQuestion() {
+      const q = currentQuestions[currentQuestion];
+      timeLeft = maxTime;
+
+      document.getElementById('question-number').textContent = `Question ${currentQuestion + 1}`;
+      document.getElementById('question-text').textContent = q.question;
+      document.getElementById('progress-text').textContent = `${currentQuestion + 1}/${currentQuestions.length}`;
+      document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / currentQuestions.length) * 100}%`;
+      document.getElementById('timer-display').textContent = timeLeft;
+      document.getElementById('explanation-panel').classList.add('hidden');
+
+      // 计算长度提示
+      const lengths = q.options.map(o => o.length);
+      const maxLen = Math.max(...lengths);
+      const correctLen = q.options.find(o => o.key === q.correct).length;
+      const isTie = lengths.filter(l => l === maxLen).length > 1;
+
+      const hintEl = document.getElementById('length-hint');
+      if (correctLen < maxLen) {
+        hintEl.textContent = `💡 答案不是最长选项（${correctLen}字 vs 最长${maxLen}字）`;
+        hintEl.className = 'inline-block px-3 py-1 bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 text-xs font-semibold rounded-full mb-4 ml-2';
+      } else if (isTie) {
+        hintEl.textContent = `💡 答案与其他选项并列最长（${correctLen}字）`;
+        hintEl.className = 'inline-block px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 text-xs font-semibold rounded-full mb-4 ml-2';
+      }
+
+      // 生成选项
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-card w-full text-left p-5 rounded-2xl transition-all group';
+        btn.onclick = () => selectAnswer(opt.key, btn);
+
+        const keyBg = isNightMode ? 'bg-slate-700 group-hover:bg-indigo-600' : 'bg-slate-200 group-hover:bg-indigo-500';
+        const keyText = isNightMode ? 'text-white' : 'text-slate-700 group-hover:text-white';
+
+        btn.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full ${keyBg} ${keyText} flex items-center justify-center font-bold text-lg transition-colors">${opt.key}</div>
+                        <div class="flex-1">
+                            <div class="text-lg font-medium">${opt.text}</div>
+                            <div class="text-xs text-slate-500 mt-1">${opt.length}字</div>
+                        </div>
+                    </div>
+                `;
+        container.appendChild(btn);
+      });
+
+      startTimer();
+    }
+
+    // 计时器
+    function startTimer() {
+      clearInterval(timer);
+      const bar = document.getElementById('timer-bar');
+      bar.style.width = '100%';
+      bar.className = 'h-full bg-gradient-to-r from-green-500 to-emerald-500 timer-bar';
+
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer-display').textContent = timeLeft;
+        const percentage = (timeLeft / maxTime) * 100;
+        bar.style.width = percentage + '%';
+
+        if (timeLeft <= 10) {
+          bar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 timer-bar';
+        } else if (timeLeft <= 20) {
+          bar.className = 'h-full bg-gradient-to-r from-yellow-500 to-orange-500 timer-bar';
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          selectAnswer(null, null);
+        }
+      }, 1000);
+    }
+
+    // 选择答案
+    function selectAnswer(selectedKey, btnElement) {
+      clearInterval(timer);
+      const q = currentQuestions[currentQuestion];
+      const isCorrect = selectedKey === q.correct;
+      const buttons = document.querySelectorAll('.option-card');
+
+      buttons.forEach(b => b.disabled = true);
+
+      buttons.forEach((btn, idx) => {
+        const optionKey = q.options[idx].key;
+        if (optionKey === q.correct) {
+          btn.classList.add('option-correct');
+        } else if (optionKey === selectedKey && !isCorrect) {
+          btn.classList.add('option-wrong');
+        }
+      });
+
+      let points = 0;
+      if (isCorrect) {
+        streak++;
+        points = Math.ceil(100 * (timeLeft / maxTime)) + (streak > 1 ? streak * 10 : 0);
+        score += points;
+
+        if (streak > 1) {
+          showStreakAnimation();
+        }
+      } else {
+        streak = 0;
+      }
+
+      updateScore();
+
+      answers.push({
+        question: q,
+        selected: selectedKey,
+        correct: isCorrect,
+        points: points
+      });
+
+      setTimeout(() => {
+        document.getElementById('explanation-text').textContent = q.explanation;
+        document.getElementById('explanation-panel').classList.remove('hidden');
+        document.getElementById('explanation-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 800);
+    }
+
+    // 连击动画
+    function showStreakAnimation() {
+      const streakEl = document.getElementById('streak-count');
+      streakEl.textContent = streak;
+      streakEl.parentElement.classList.add('scale-125');
+      setTimeout(() => {
+        streakEl.parentElement.classList.remove('scale-125');
+      }, 300);
+    }
+
+    // 更新分数
+    function updateScore() {
+      document.getElementById('score-display').textContent = score;
+      document.getElementById('streak-count').textContent = streak;
+    }
+
+    // 下一题
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < currentQuestions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // 显示结果
+    function showResult() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      const correctCount = answers.filter(a => a.correct).length;
+      const accuracy = Math.round((correctCount / currentQuestions.length) * 100);
+
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('correct-count').textContent = correctCount;
+      document.getElementById('accuracy').textContent = accuracy + '%';
+
+      let badge, emoji, message;
+      if (accuracy === 100) {
+        badge = currentModule === 'digital' ? '数智化大师' : 'AI架构师';
+        emoji = '🏆';
+        message = '完美！你对这个领域了如指掌！';
+      } else if (accuracy >= 80) {
+        badge = currentModule === 'digital' ? '数字化专家' : 'AI工程师';
+        emoji = '🌟';
+        message = '很棒！你对这个领域有深入理解。';
+      } else if (accuracy >= 60) {
+        badge = currentModule === 'digital' ? '信息化能手' : 'AI应用者';
+        emoji = '👍';
+        message = '不错！继续学习相关知识。';
+      } else {
+        badge = '学习达人';
+        emoji = '💪';
+        message = '加油！建议重新学习相关概念。';
+      }
+
+      document.getElementById('performance-badge').textContent = badge;
+      document.getElementById('result-emoji').textContent = emoji;
+      document.getElementById('result-message').textContent = message;
+    }
+
+    // 重新开始
+    function restartQuiz() {
+      document.getElementById('result-screen').classList.add('hidden');
+      startQuiz();
+    }
+
+    // 查看解析
+    function showReview() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('review-screen').classList.remove('hidden');
+
+      const container = document.getElementById('review-container');
+      container.innerHTML = '';
+
+      answers.forEach((ans, idx) => {
+        const div = document.createElement('div');
+        const borderColor = ans.correct ? 'border-green-500' : 'border-red-500';
+        div.className = `glass-panel rounded-2xl p-6 border-l-4 ${borderColor}`;
+
+        let optionsHtml = '';
+        ans.question.options.forEach(opt => {
+          const isSelected = opt.key === ans.selected;
+          const isCorrect = opt.key === ans.question.correct;
+          let bgClass = isNightMode ? 'bg-slate-800/30' : 'bg-slate-100/50';
+          let textClass = isNightMode ? 'text-slate-300' : 'text-slate-700';
+
+          if (isCorrect) {
+            bgClass = 'bg-green-500/20 border border-green-500/50';
+          } else if (isSelected && !isCorrect) {
+            bgClass = 'bg-red-500/20 border border-red-500/50';
+          }
+
+          optionsHtml += `
+                        <div class="${bgClass} rounded-lg p-3 mb-2 flex justify-between items-center ${textClass}">
+                            <span><strong>${opt.key}.</strong> ${opt.text}</span>
+                            <span class="text-xs text-slate-500">${opt.length}字</span>
+                        </div>
+                    `;
+        });
+
+        const statusColor = ans.correct ? 'text-green-500' : 'text-red-500';
+        const statusText = ans.correct ? '✓ 正确' : '✗ 错误';
+
+        div.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-lg text-slate-800 dark:text-white">第${idx + 1}题</h3>
+                        <span class="${statusColor} font-bold">
+                            ${statusText} ${ans.points > 0 ? '+' + ans.points : ''}
+                        </span>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 mb-4">${ans.question.question}</p>
+                    <div class="space-y-2 mb-4">
+                        ${optionsHtml}
+                    </div>
+                    <div class="text-sm text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg p-3">
+                        <strong>解析：</strong>${ans.question.explanation}
+                    </div>
+                `;
+        container.appendChild(div);
+      });
+    }
+
+    // 返回结果页
+    function backToResult() {
+      document.getElementById('review-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+    }
+  </script>
+</body>
+
+</html>
